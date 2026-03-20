@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model musica {
+  id       Int      @id @default(autoincrement())
+  titulo   String   @db.VarChar(200)
+  artista  String   @db.VarChar(200)
+  genero   String   @db.VarChar(50)
+  ano      Int
+  favorita Boolean? @default(false)
+}
