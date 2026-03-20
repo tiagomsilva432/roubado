@@ -1,6 +1,8 @@
 const express = require("express");
 const mysql = require("mysql2/promise");
 const app = express();
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
 app.use(express.json());
 const PORT = 3000;
 const path = require("path");
@@ -15,8 +17,12 @@ const generosValidos = [
   "outro",
 ];
 //Preparar SQL
-
-const pool = mysql.createPool({
+async function initDB() {
+  // Your database connection logic or seeding logic here
+  await prisma.$connect();
+  console.log("Database connected!");
+}
+/*const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "root",
@@ -43,7 +49,7 @@ async function initDB() {
     process.exit(1);
   }
 }
-
+*/
 app.get("/", (req, res) => {
   res.status(200).json("Biblioteca de música");
 });
@@ -81,7 +87,7 @@ function validarMusica(req, res, next) {
 
 //GET
 app.get("/api/musicas", async (req, res) => {
-  try {
+ /* try {
     let query = "SELECT * FROM musica";
     const condicoes = [];
     const valores = [];
@@ -110,6 +116,13 @@ app.get("/api/musicas", async (req, res) => {
   } catch (erro) {
     console.error("Erro no GET", erro.message);
     res.status(500).json({ erro: "Erro a procurar músicas" });
+  }*/
+  try {
+    const test = await prisma.musica.findMany()
+    console.log(test)
+    res.status(200).json(test).send()
+  } catch(e) {
+    console.log(e)
   }
 });
 
